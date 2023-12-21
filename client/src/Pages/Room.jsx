@@ -1,17 +1,17 @@
 import React, { useContext, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import SocketContext from '../MyContext'
-import ChatWindow from './ChatWindow'
-import { Typography } from '@mui/material'
-const Room = () => {
-  const params = useParams()
+import ChatWindow from '../Components/ChatWindow'
 
-  const socket = useContext(SocketContext)
+const Room = () => {
+  const {Id} = useParams()
+
+  const {socket} = useContext(SocketContext)
 
   useEffect(() => {
     if (!socket) return
 
-    socket.emit('join-room', { roomId: params.Id })
+    socket.emit('join-room', { Id })
   }, [socket])
 
   return (

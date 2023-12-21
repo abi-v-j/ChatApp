@@ -1,14 +1,14 @@
 import React, { useContext } from 'react'
 import SendIcon from '@mui/icons-material/Send';
-import { Box, Card, IconButton, InputAdornment, InputLabel, OutlinedInput, Typography } from '@mui/material';
+import { Box, Button, Card, IconButton, InputAdornment, InputLabel, OutlinedInput, Typography } from '@mui/material';
 import { useEffect, useState } from 'react'
 import SocketContext from '../MyContext'
 import { useParams } from 'react-router-dom';
 
 const ChatWindow = () => {
 
-    const socket = useContext(SocketContext);
-    const {Id} = useParams()
+    const { socket } = useContext(SocketContext);
+    const { Id } = useParams()
 
 
 
@@ -21,7 +21,7 @@ const ChatWindow = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         socket.emit('send-message', { message, Id })
-        setChat((prevChat) => [...prevChat, { message, received: false }]);
+        // setChat((prevChat) => [...prevChat, { message, received: false }]);
 
         setMessage('')
 
@@ -30,13 +30,17 @@ const ChatWindow = () => {
 
     const handleInput = (e) => {
         setMessage(e.target.value)
-        socket.emit('typing-started',{ Id })
+        socket.emit('typing-started', { Id })
 
         if (typingTimeOut) clearTimeout(typingTimeOut)
 
         setTypingTimeOut(setTimeout(() => {
-            socket.emit('typing-stopped',{ Id })
+            socket.emit('typing-stopped', { Id })
         }, 500))
+    }
+
+    const removeRoom = () => {
+       socket.emit('remove-room',{Id})
     }
 
 
@@ -61,9 +65,16 @@ const ChatWindow = () => {
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Card sx={{ padding: 2, marginTop: 10, width: '60%', backgroundColor: 'gray', color: 'white' }}>
-                {
-                    Id && <Typography>Room : {Id}</Typography>
-                }
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    {
+
+                        Id && <Typography>Room : {Id}</Typography>
+                    }
+                    {
+                        Id && <Button variant='text' size='small' color='inherit' onClick={removeRoom}>Delete</Button>
+
+                    }
+                </Box>
                 <Box sx={{ marginBottom: 5 }}>
                     {
                         chat.map((msg, key) => (

@@ -1,7 +1,11 @@
 import express from 'express'
 import http from 'http'
 import { Server } from 'socket.io'
-import Sockets from './Socket/Sockets.js'
+import sockets from './Socket/Sockets.js'
+import MongoDB from './config/DB.js'
+import roomRoute from './crud/Room.js'
+import cors from 'cors'
+
 const app = express()
 const PORT = 7000
 
@@ -12,12 +16,15 @@ const io = new Server(httpServer, {
     }
 })
 
+MongoDB()
 // import path from 'path'
 // import { fileURLToPath } from 'url'
 // const __filename = fileURLToPath(import.meta.url)
 // const __dirname = path.dirname(__filename)
 
 
+app.use(cors())
+app.use('/room', roomRoute)
 
 
 // app.get('',(req,res) => {
@@ -26,7 +33,7 @@ const io = new Server(httpServer, {
 
 // })
 
-io.on('connection', Sockets)
+io.on('connection', sockets)
 
 
 
