@@ -1,4 +1,4 @@
-import TypingStarted from './Controllers/TypingControllers'
+import {TypingStarted, TypingEnded} from './Controllers/TypingControllers.js'
 
 const Sockets = (socket) => {
     socket.on('send-message', ({message, Id}) => {
@@ -9,7 +9,7 @@ const Sockets = (socket) => {
 
     socket.on('typing-started', TypingStarted)
 
-    socket.on('typing-stopped', )
+    socket.on('typing-stopped', TypingEnded)
 
     socket.on('join-room', ({roomId}) => {
         socket.join('join room')
