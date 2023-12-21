@@ -1,3 +1,12 @@
+export default class TypingController {
+    private socket;
+    constructor(){
+
+    }
+}
+
+
+
 export const TypingStarted = ({ Id }) => {
     let skt = socket.broadcast
     skt = Id ? skt.to(Id) : skt
