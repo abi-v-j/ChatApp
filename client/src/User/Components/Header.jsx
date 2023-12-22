@@ -33,8 +33,6 @@ const Header = ({ setUserId }) => {
     const Login = () => {
         const userId = uuidv4()
         setUserId(userId)
-        Cookie.set('userId', userId)
-        navigate('/')
     }
 
     const Logout = () => {

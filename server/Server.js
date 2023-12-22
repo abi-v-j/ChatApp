@@ -7,6 +7,9 @@ import MongoDB from './config/DB.js'
 import roomRoute from './crud/Room.js'
 import userRoute from './crud/User.js'
 import checkRoute from './crud/CheckUser.js'
+import userLogin from './crud/UserLogin.js'
+import userAuth from './crud/Auth.js'
+
 import cors from 'cors'
 
 const app = express()
@@ -26,6 +29,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/room', roomRoute)
 app.use('/user', userRoute)
 app.use('/checkUser', checkRoute)
+app.use('/userLogin', userLogin)
+app.use('/userAuth', userAuth)
 
 
 

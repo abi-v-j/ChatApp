@@ -15,7 +15,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Registration = () => {
   const navigate = useNavigate();
@@ -26,6 +26,7 @@ const Registration = () => {
   const [name, setName] = useState("");
   const [password, setPassord] = useState("");
   const [repassword, setRePassord] = useState("");
+  const [check, setCheck] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const confirmHandleClickShowPassword = () =>
@@ -45,7 +46,8 @@ const Registration = () => {
     axios
       .post("http://localhost:7000/checkUser/", { userName })
       .then((response) => {
-        console.log(response.data);
+        const data = response.data.check
+        setCheck(data)
       });
   };
 
@@ -57,6 +59,11 @@ const Registration = () => {
       return;
     }
 
+    if (check) {
+      alert("Username taken.Please choose another")
+      return
+    }
+
     const requestData = {
       name,
       userName,
@@ -66,7 +73,9 @@ const Registration = () => {
     axios.post("http://localhost:7000/user/", requestData).then((response) => {
       Cookies.set("userId", response.data.token);
       alert(response.data.message);
-      navigate("/Admin");
+      if (response.data.check) {
+        navigate("/User");
+      }
     });
   };
 
@@ -84,11 +93,12 @@ const Registration = () => {
     >
       <Card
         sx={{
-          width: "30%",
+          width: 400,
           height: 500,
           backgroundColor: "ButtonShadow",
           display: "flex",
           justifyContent: "center",
+          p: 2
         }}
       >
         <Box sx={{ width: "60%", p: 4 }}>
@@ -107,15 +117,31 @@ const Registration = () => {
             onChange={(event) => setName(event.target.value)}
             value={name}
           />
-          <TextField
-            id="standard-basic"
-            label="Username"
-            variant="standard"
-            fullWidth
-            sx={{ mt: 2 }}
-            onChange={handleUsername}
-            value={userName}
-          />
+          <Box sx={{ mt: 2 }}>
+
+
+            <TextField
+              id="my-show-text"
+              label="Username"
+              variant="standard"
+              fullWidth
+
+              onChange={handleUsername}
+              value={userName}
+            />
+            <Box sx={{ height: 5 }}>
+
+              {
+                check && <InputLabel shrink htmlFor="my-show-text">
+                  <Typography color='error'>
+                    Username taken
+                  </Typography>
+                </InputLabel>
+              }
+            </Box>
+
+
+          </Box>
           <FormControl sx={{ mt: 2 }} variant="standard" fullWidth>
             <InputLabel htmlFor="standard-adornment-password">
               Password
@@ -165,6 +191,11 @@ const Registration = () => {
           <Button sx={{ mt: 3 }} fullWidth variant="contained" type="submit">
             Next
           </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+            <Link to='/'>
+              <Button variant="text" >I have an Account</Button>
+            </Link>
+          </Box>
         </Box>
       </Card>
     </Box>
