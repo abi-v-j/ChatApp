@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const roomSchema = new mongoose.Schema({
+const chatSchema = new mongoose.Schema({
   dateTime: {
     type: String,
     default: () => new Date().toISOString(), 
@@ -18,4 +18,4 @@ const roomSchema = new mongoose.Schema({
  
 
 });
-export default  mongoose.model('room', roomSchema);
+export default  mongoose.model('chat', chatSchema);
