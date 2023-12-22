@@ -1,4 +1,5 @@
 import BaseController from "./BaseController.js"
+import Chat from "../../Models/Chat.js"
 
 export default class MessageController  extends BaseController {
    

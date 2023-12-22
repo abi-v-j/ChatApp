@@ -2,13 +2,15 @@ import React, { useContext } from 'react'
 import SendIcon from '@mui/icons-material/Send';
 import { Box, Button, Card, IconButton, InputAdornment, InputLabel, OutlinedInput, Typography } from '@mui/material';
 import { useEffect, useState } from 'react'
-import SocketContext from '../MyContext'
-import { useParams } from 'react-router-dom';
+import SocketContext from '../../MyContext'
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ChatWindow = () => {
 
     const { socket } = useContext(SocketContext);
     const { Id } = useParams()
+    const navigate = useNavigate()
+
 
 
 
@@ -21,7 +23,7 @@ const ChatWindow = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         socket.emit('send-message', { message, Id })
-        // setChat((prevChat) => [...prevChat, { message, received: false }]);
+        setChat((prevChat) => [...prevChat, { message, received: false }]);
 
         setMessage('')
 
@@ -40,7 +42,8 @@ const ChatWindow = () => {
     }
 
     const removeRoom = () => {
-       socket.emit('remove-room',{Id})
+        socket.emit('remove-socket-room', { Id })
+        navigate('/')
     }
 
 

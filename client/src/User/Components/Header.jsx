@@ -2,7 +2,7 @@ import { Box, Button, Card } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid';
-import SocketContext from '../MyContext'
+import SocketContext from '../../MyContext'
 import axios from 'axios'
 import Cookie from 'js-cookie'
 
@@ -56,8 +56,9 @@ const Header = ({ setUserId }) => {
             setRooms((prevRoom) => [...prevRoom, room])
         })
 
-        socket.on('remove-room', ({ Id }) => {
-            setRooms(rooms.filter((room) => room.roomId !== Id))
+        socket.on('remove-socket-room', ({ Id }) => {
+            console.log(Id);
+            setRooms((prevRooms) => prevRooms.filter((room) => room.roomId !== Id));
         })
     }, [socket])
 

@@ -16,7 +16,7 @@ const Sockets = (socket) => {
 
     socket.on('join-room', roomController.JoinRoom )
     socket.on('new-room-created', roomController.NewRoomCreated )
-    socket.on('remove-room', roomController.RemoveRoom )
+    socket.on('remove-socket-room', roomController.RemoveRoom )
 
     socket.on('disconnect', (socket) => {
         console.log('User is left');
