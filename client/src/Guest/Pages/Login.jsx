@@ -10,7 +10,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import axios from "axios";
@@ -19,6 +19,27 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Registration = () => {
     const navigate = useNavigate();
+
+    const token = Cookies.get('userId')
+    
+    useEffect(() => {
+  
+      axios.get('http://localhost:7000/userAuth/', {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token,
+        },
+      })
+        .then(response => {
+          console.log(response.data);
+          if(response.data.check){
+            navigate('/User')
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }, [navigate, token]);
 
     const [showPassword, setShowPassword] = useState(false);
     const [userName, setUserName] = useState("");

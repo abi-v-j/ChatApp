@@ -24,7 +24,6 @@ const Header = ({ setUserId }) => {
     const fetchData = () => {
         axios.get('http://localhost:7000/room').then((response) => {
             const data = response.data
-            console.log(data);
             setRooms(data)
 
         })
@@ -62,7 +61,7 @@ const Header = ({ setUserId }) => {
 
 
     return (
-        <Card sx={{ marginTop: 5, backgroundColor: 'gray' }} raised>
+        <Card sx={{ marginTop: 5, backgroundColor: 'gray' ,p:1}} raised>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Box>
                     <Link to='../' >
@@ -71,7 +70,7 @@ const Header = ({ setUserId }) => {
 
                     {
                         rooms.map((room, key) => (
-                            <Link to={`/Room/${room.roomId}`} key={key} >
+                            <Link to={`/User/Room/${room.roomId}`} key={key} >
                                 <Button sx={{ color: 'white', textDecoration: 'none' }} variant='text'>{room.name}</Button>
                             </Link>
                         ))

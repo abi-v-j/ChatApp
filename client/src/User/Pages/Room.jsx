@@ -11,6 +11,7 @@ const Room = () => {
   useEffect(() => {
     if (!socket) return
 
+
     socket.emit('join-room', { Id })
   }, [socket,Id])
 

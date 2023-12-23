@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 import SocketContext from '../MyContext'
 import Cookies from 'js-cookie'
+import Search from './Components/Search'
 
 
 const App = () => {
@@ -32,6 +33,7 @@ const App = () => {
           <Route path='/' element={<Home />} />
           <Route path='/Chat' element={<ChatWindow />} />
           <Route path='/Room/:Id' element={<Room />} />
+          <Route path='/Search' element={<Search />} />
         </Routes>
       </Container>
     </SocketContext.Provider>
