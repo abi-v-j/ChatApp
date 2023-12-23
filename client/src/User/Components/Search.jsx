@@ -1,29 +1,44 @@
-import { Avatar, Box, Card, TextField, Typography } from '@mui/material'
+import { Avatar, Box, Button, Card, TextField, Typography } from '@mui/material'
 import axios from 'axios';
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+// import { v4 as uuidv4 } from 'uuid';
+import SocketContext from '../../MyContext'
+
+
 
 const Search = () => {
     const [userdata, setUserData] = useState([])
-    const [check, setCheck] = useState(false)
+    const { socket } = useContext(SocketContext)
+
+
+
     const handleSearch = (event) => {
         const userName = event.target.value;
-        if(!userName) {
-            setCheck(false)
+
+        if (userName === '') {
             setUserData([])
         }
+        else {
+            axios
+                .post("http://localhost:7000/userSearch/", { userName })
+                .then((response) => {
+                    const data = response.data.userData
+                    console.log(data);
+                    setUserData(data)
 
+                });
 
-        axios
-            .post("http://localhost:7000/userSearch/", { userName })
-            .then((response) => {
-                const data = response.data.userData
-                console.log(data);
-                setUserData(data)
-                setCheck(true)
+        }
+    }
 
-            });
+    const handleAddRequest = (Id) => {
+
+        socket.emit('send-request', { Id })
 
     }
+
+
+
     return (
         <Box>
             <Box sx={{ m: 5 }}>
@@ -32,34 +47,41 @@ const Search = () => {
                 </Card>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                {
-                    check &&
-                    <Box sx={{ m: 5, width: 500 }}>
-                        <Card sx={{ p: 5 }}>
-                            {
-                                userdata.map((data, key) => (
-                                    <Box sx={{ display: 'flex' }} key={key}>
 
-                                        <Box sx={{ width: '20%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Avatar />
+                <Box sx={{ m: 5, width: '60%', height: 300 }}>
+                    <Box sx={{ p: 5, overflowY: 'hidden', }}>
+                        {
+                            userdata.map((data, key) => (
+                                <Box sx={{ display: 'flex' }} key={key}>
 
-                                        </Box>
-                                        <Box sx={{ p: 3, borderBottom: 1, width: '80%' }}>
+                                    <Box sx={{ width: '20%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Avatar sx={{ width: 60, height: 60 }} />
+
+                                    </Box>
+                                    <Box sx={{ p: 3, borderBottom: 1, width: '80%', display: 'flex', justifyContent: 'space-between' }}>
+                                        <Box>
                                             <Typography variant='h5'>
                                                 {data.name}
                                             </Typography>
+                                            <Typography >
+                                                {data.userName}
+                                            </Typography>
                                         </Box>
-
-
+                                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end' }}>
+                                            <Button size='small' variant="outlined" onClick={() => handleAddRequest(data._id)}>Add</Button>
+                                        </Box>
                                     </Box>
-                                ))
-                            }
 
 
-                        </Card>
+                                </Box>
+                            ))
+                        }
+
 
                     </Box>
-                }
+
+                </Box>
+
 
 
             </Box>

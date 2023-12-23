@@ -9,6 +9,7 @@ import { io } from 'socket.io-client'
 import SocketContext from '../MyContext'
 import Cookies from 'js-cookie'
 import Search from './Components/Search'
+import ViewRequest from './Components/ViewRequest'
 
 
 const App = () => {
@@ -34,6 +35,7 @@ const App = () => {
           <Route path='/Chat' element={<ChatWindow />} />
           <Route path='/Room/:Id' element={<Room />} />
           <Route path='/Search' element={<Search />} />
+          <Route path='/ViewRequest' element={<ViewRequest />} />
         </Routes>
       </Container>
     </SocketContext.Provider>
