@@ -3,13 +3,13 @@ import { Route, Routes } from 'react-router-dom'
 import Header from './Components/Header'
 import Home from './Pages/Home'
 import Room from './Pages/Room'
-import ChatWindow from './Components/ChatWindow'
+// import ChatWindow from './Components/ChatWindow'
 import { useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 import SocketContext from '../MyContext'
 import Cookies from 'js-cookie'
 import Search from './Components/Search'
-import ViewRequest from './Components/ViewRequest'
+import Chat from './Components/Chat'
 
 
 const App = () => {
@@ -32,10 +32,10 @@ const App = () => {
         <Header setUserId={setUserId} />
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/Chat' element={<ChatWindow />} />
+          {/* <Route path='/Chat' element={<ChatWindow />} /> */}
           <Route path='/Room/:Id' element={<Room />} />
           <Route path='/Search' element={<Search />} />
-          <Route path='/ViewRequest' element={<ViewRequest />} />
+          <Route path='/Chat' element={<Chat />} />
         </Routes>
       </Container>
     </SocketContext.Provider>

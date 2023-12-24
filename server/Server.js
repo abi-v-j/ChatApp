@@ -10,6 +10,7 @@ import checkRoute from './crud/CheckUser.js'
 import userLogin from './crud/UserLogin.js'
 import userAuth from './crud/Auth.js'
 import userSearch from './crud/Search.js'
+import showChat from './crud/Chat.js'
 
 import cors from 'cors'
 
@@ -33,6 +34,7 @@ app.use('/checkUser', checkRoute)
 app.use('/userLogin', userLogin)
 app.use('/userAuth', userAuth)
 app.use('/userSearch', userSearch)
+app.use('/showChat', showChat)
 
 
 

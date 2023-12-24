@@ -1,14 +1,17 @@
 import { Avatar, Box, Button, Card, TextField, Typography } from '@mui/material'
 import axios from 'axios';
 import React, { useContext, useState } from 'react'
-// import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import SocketContext from '../../MyContext'
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const Search = () => {
     const [userdata, setUserData] = useState([])
     const { socket } = useContext(SocketContext)
+    const navigate = useNavigate()
 
 
 
@@ -31,9 +34,15 @@ const Search = () => {
         }
     }
 
-    const handleAddRequest = (Id) => {
+    const handleAddRequest = (toId) => {
 
-        socket.emit('send-request', { Id })
+            const chatId = uuidv4()
+            const fromId = Cookies.get('userId')
+            navigate(`/Room`)
+            socket.emit('new-room-created', { chatId,toId, fromId })
+            // setRooms((prevRoom) => [...prevRoom, {Id,name:'Test',_id:'testId'}])
+    
+
 
     }
 

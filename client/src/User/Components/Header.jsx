@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid';
 import SocketContext from '../../MyContext'
-import axios from 'axios'
+// import axios from 'axios'
 import Cookie from 'js-cookie'
 
 
@@ -21,13 +21,13 @@ const Header = ({ setUserId }) => {
         // setRooms((prevRoom) => [...prevRoom, {Id,name:'Test',_id:'testId'}])
 
     }
-    const fetchData = () => {
-        axios.get('http://localhost:7000/room').then((response) => {
-            const data = response.data
-            setRooms(data)
+    // const fetchData = () => {
+    //     axios.get('http://localhost:7000/room').then((response) => {
+    //         const data = response.data
+    //         setRooms(data)
 
-        })
-    }
+    //     })
+    // }
 
     const Login = () => {
         const userId = uuidv4()
@@ -41,10 +41,10 @@ const Header = ({ setUserId }) => {
     }
 
 
-    useEffect(() => {
-        fetchData()
+    // useEffect(() => {
+    //     fetchData()
 
-    }, [])
+    // }, [])
 
     useEffect(() => {
         if (!socket) return

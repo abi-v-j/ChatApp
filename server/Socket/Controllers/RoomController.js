@@ -1,5 +1,7 @@
 import BaseController from "./BaseController.js"
 import Room from "../../Models/Room.js";
+import jwt from "jsonwebtoken";
+import "../../env.js";
 
 export default class RoomController extends BaseController {
 
@@ -7,11 +9,17 @@ export default class RoomController extends BaseController {
         console.log('join room');
         this.socket.join(Id)
     }
-    NewRoomCreated = ({ Id, userId }) => {
+    NewRoomCreated = ({ chatId, toId, fromId }) => {
+
+        const decodedToken = jwt.verify(fromId, process.env.JWT_SECRET);
+        const userId = decodedToken.user.id;
+
+
+
         const room = new Room({
-            name: 'test',
-            roomId: Id,
-            userId
+            fromId : userId ,
+            roomId: chatId,
+            toId
         })
         room.save()
 

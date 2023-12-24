@@ -1,9 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useContext, useLayoutEffect } from 'react'
 import SendIcon from '@mui/icons-material/Send';
 import { Box, Button, Card, IconButton, InputAdornment, InputLabel, OutlinedInput, Typography } from '@mui/material';
 import { useEffect, useState } from 'react'
 import SocketContext from '../../MyContext'
 import { useNavigate, useParams } from 'react-router-dom';
+import Cookies from 'js-cookie'
+import axios from 'axios';
 
 const ChatWindow = () => {
 
@@ -22,8 +24,9 @@ const ChatWindow = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        socket.emit('send-message', { message, Id })
-        setChat((prevChat) => [...prevChat, { message, received: false }]);
+        const Uid = Cookies.get('userId')
+
+        socket.emit('send-message', { message, Id, Uid })
 
         setMessage('')
 
@@ -48,12 +51,34 @@ const ChatWindow = () => {
 
 
 
+    useLayoutEffect(() => {
+        const Uid = Cookies.get('userId')
+
+        axios.post('http://localhost:7000/showChat/', { Uid, Id })
+            .then((response) => {
+                const data = response.data.userDataWithReceived
+                setChat(data)
+
+
+            })
+    }, [Id])
+
+
+
     useEffect(() => {
         if (!socket) return
 
 
-        socket.on('message-from-server', (data) => {
-            setChat((prevChat) => [...prevChat, { message: data.message, received: true }]);
+        socket.on('message-from-server', () => {
+            const Uid = Cookies.get('userId')
+
+            axios.post('http://localhost:7000/showChat/', { Uid, Id })
+                .then((response) => {
+                    const data = response.data.userDataWithReceived
+                    setChat(data)
+
+
+                })
 
         })
 
@@ -82,7 +107,11 @@ const ChatWindow = () => {
                     {
                         chat.map((msg, key) => (
 
-                            <Typography sx={{ textAlign: msg.received ? 'left' : 'right' }} key={key}>{msg.message}</Typography>
+                            <Typography sx={{ display: 'flex', justifyContent: msg.received ? 'flex-start' : 'flex-end' }} key={key}>
+                                <Card sx={{ px: 2, mx: 3, mt: 1 }}>
+                                    {msg.message}
+                                </Card>
+                            </Typography>
                         ))
                     }
                 </Box>

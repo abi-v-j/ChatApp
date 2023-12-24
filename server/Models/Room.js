@@ -1,16 +1,17 @@
 import mongoose from 'mongoose';
 
 const roomSchema = new mongoose.Schema({
-  name: {
-    type: String,
+  fromId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user', // Replace 'User' with the actual name of the referenced collection
   },
   roomId: {
-    type:String,
+    type: String,
   },
-  userId:{
-    type:String
+  toId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user', // Replace 'User' with the actual name of the referenced collection
   }
- 
-
 });
-export default  mongoose.model('room', roomSchema);
+
+export default mongoose.model('Room', roomSchema);
