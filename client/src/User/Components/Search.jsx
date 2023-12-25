@@ -22,11 +22,13 @@ const Search = () => {
             setUserData([])
         }
         else {
+
+            const Id = Cookies.get('userId')
+
             axios
-                .post("http://localhost:7000/userSearch/", { userName })
+                .post("http://localhost:7000/userSearch/", { userName, Id })
                 .then((response) => {
-                    const data = response.data.userData
-                    console.log(data);
+                    const data = response.data.userDataWithRooms
                     setUserData(data)
 
                 });
@@ -36,12 +38,11 @@ const Search = () => {
 
     const handleAddRequest = (toId) => {
 
-            const chatId = uuidv4()
-            const fromId = Cookies.get('userId')
-            navigate(`/Room`)
-            socket.emit('new-room-created', { chatId,toId, fromId })
-            // setRooms((prevRoom) => [...prevRoom, {Id,name:'Test',_id:'testId'}])
-    
+        const chatId = uuidv4()
+        const fromId = Cookies.get('userId')
+        navigate(`/User`)
+        socket.emit('new-room-created', { chatId, toId, fromId })
+
 
 
     }
@@ -77,7 +78,7 @@ const Search = () => {
                                             </Typography>
                                         </Box>
                                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end' }}>
-                                            <Button size='small' variant="outlined" onClick={() => handleAddRequest(data._id)}>Add</Button>
+                                            <Button size='small' disabled={data.hasRoom} variant="outlined" onClick={() => handleAddRequest(data._id)}>{data.hasRoom ? 'Already Added' : 'Add'}</Button>
                                         </Box>
                                     </Box>
 

@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import Room from '../Models/Room.js';
-import User from '../Models/User.js';
 import jwt from 'jsonwebtoken';
 import '../env.js';
 import mongoose from 'mongoose';
@@ -102,7 +101,6 @@ router.get('/:Id', async (req, res) => {
         ]);
 
 
-        console.log(filteredRooms);
         res.status(200).send(filteredRooms);
     } catch (error) {
         console.error(error);

@@ -9,7 +9,7 @@ export default class RoomController extends BaseController {
         console.log('join room');
         this.socket.join(Id)
     }
-    NewRoomCreated = ({ chatId, toId, fromId }) => {
+    NewRoomCreated = async ({ chatId, toId, fromId }) => {
 
         const decodedToken = jwt.verify(fromId, process.env.JWT_SECRET);
         const userId = decodedToken.user.id;
@@ -21,9 +21,10 @@ export default class RoomController extends BaseController {
             roomId: chatId,
             toId
         })
-        room.save()
+        await room.save()
 
-        this.socket.emit('new-room-created', { room })
+        this.socket.broadcast.emit('new-room-created')
+        this.socket.emit('new-room-created')
 
     }
     RemoveRoom = async ({ Id }) => {

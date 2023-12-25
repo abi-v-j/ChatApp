@@ -1,17 +1,20 @@
-import React, { useContext, useLayoutEffect } from 'react'
+import React, { useContext, useRef } from 'react'
 import SendIcon from '@mui/icons-material/Send';
-import { Box, Button, Card, IconButton, InputAdornment, InputLabel, OutlinedInput, Typography } from '@mui/material';
+import { Box, Card, IconButton, InputAdornment, InputLabel, OutlinedInput, Typography } from '@mui/material';
 import { useEffect, useState } from 'react'
 import SocketContext from '../../MyContext'
-import { useNavigate, useParams } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie'
 import axios from 'axios';
+import ChatHead from './ChatHead';
 
-const ChatWindow = () => {
+const ChatWindow = ({ Id, userName }) => {
+
 
     const { socket } = useContext(SocketContext);
-    const { Id } = useParams()
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
+    const messagesContainerRef = useRef();
+
 
 
 
@@ -27,6 +30,8 @@ const ChatWindow = () => {
         const Uid = Cookies.get('userId')
 
         socket.emit('send-message', { message, Id, Uid })
+
+
 
         setMessage('')
 
@@ -44,74 +49,80 @@ const ChatWindow = () => {
         }, 500))
     }
 
-    const removeRoom = () => {
-        socket.emit('remove-socket-room', { Id })
-        navigate('/')
-    }
+    // const removeRoom = () => {
+    //     socket.emit('remove-socket-room', { Id })
+    //     navigate('/')
+    // }
+
+    useEffect(() => {
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
 
 
+    }, [chat])
 
-    useLayoutEffect(() => {
-        const Uid = Cookies.get('userId')
-
-        axios.post('http://localhost:7000/showChat/', { Uid, Id })
-            .then((response) => {
-                const data = response.data.userDataWithReceived
-                setChat(data)
-
-
-            })
-    }, [Id])
 
 
 
     useEffect(() => {
-        if (!socket) return
+        if (!socket) return;
 
-
-        socket.on('message-from-server', () => {
-            const Uid = Cookies.get('userId')
+        const fetchData = () => {
+            const Uid = Cookies.get('userId');
 
             axios.post('http://localhost:7000/showChat/', { Uid, Id })
                 .then((response) => {
-                    const data = response.data.userDataWithReceived
-                    setChat(data)
+                    const data = response.data.userDataWithReceived;
+                    setChat(data);
+                });
+        };
 
+        fetchData();
 
-                })
+        const handleMessageFromServer = () => fetchData();
 
-        })
+        socket.on('message-from-server', handleMessageFromServer);
 
-        socket.on('typing-started-from-server', () => setTyping(true))
-        socket.on('typing-stopped-from-server', () => setTyping(false))
+        socket.on('typing-started-from-server', () => setTyping(true));
+        socket.on('typing-stopped-from-server', () => setTyping(false));
 
+        return () => {
+            socket.off('message-from-server', handleMessageFromServer);
+            // Remove other event listeners if needed
+        };
 
-
-
-    }, [socket])
+    }, [socket, Id]);
 
     return (
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Card sx={{ padding: 2, marginTop: 10, width: '60%', backgroundColor: 'gray', color: 'white' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    {
-
-                        Id && <Typography>Room : {Id}</Typography>
-                    }
-                    {
-                        Id && <Button variant='text' size='small' color='inherit' onClick={removeRoom}>Delete</Button>
-
-                    }
+        <Box sx={{ display: 'flex', justifyContent: 'center', p: 5 }}>
+            <Card sx={{ padding: 2, mt: 2, width: 600, backgroundColor: 'gray', color: 'white' }}>
+                <Box sx={{ pb: 1 }}>
+                    <ChatHead userData={userName} />
                 </Box>
-                <Box sx={{ marginBottom: 5 }}>
+                <Box
+                    sx={{
+                        marginBottom: 5,
+                        height: 300,
+                        overflowY: 'scroll',
+                        WebkitOverflowScrolling: 'touch',
+                        '&::-webkit-scrollbar': {
+                            width: '5px',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                            backgroundColor: 'lightgray',
+                        },
+                    }}
+                    ref={messagesContainerRef}
+                >
                     {
                         chat.map((msg, key) => (
 
-                            <Typography sx={{ display: 'flex', justifyContent: msg.received ? 'flex-start' : 'flex-end' }} key={key}>
-                                <Card sx={{ px: 2, mx: 3, mt: 1 }}>
-                                    {msg.message}
+                            <Box sx={{ display: 'flex', justifyContent: msg.received ? 'flex-end' : 'flex-start' }} key={key}>
+                                <Card sx={{ p: 1, mx: 3, mt: 1, borderRadius: 4, maxWidth: 180 }}>
+                                    <Typography sx={{ fontWeight: 400 }}>
+                                        {msg.message}
+                                    </Typography>
                                 </Card>
-                            </Typography>
+                            </Box>
                         ))
                     }
                 </Box>

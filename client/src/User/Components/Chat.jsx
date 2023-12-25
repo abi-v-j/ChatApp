@@ -6,24 +6,48 @@ import { Avatar, Box, Card, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 
 
-const Chat = () => {
+const Chat = ({ setRoomId, setUserName }) => {
   const { socket } = useContext(SocketContext)
 
   // console.log(Id);
 
   const [chatName, setChatName] = useState([])
 
+
   useEffect(() => {
     const Id = Cookies.get('userId')
-
     axios.get(`http://localhost:7000/room/${Id}`).then((response) => {
       const data = response.data
       console.log(data);
       setChatName(data)
-
+      console.log('hi');
 
     })
   }, [])
+
+  useEffect(() => {
+    if (!socket) return
+
+    console.log('hello');
+
+
+    const Id = Cookies.get('userId')
+
+
+
+    socket.on('new-room-created', () => {
+      axios.get(`http://localhost:7000/room/${Id}`).then((response) => {
+        const data = response.data
+        console.log(data);
+        setChatName(data)
+        console.log('how');
+
+      })
+    })
+
+
+
+  }, [socket])
 
 
 
@@ -34,18 +58,17 @@ const Chat = () => {
 
 
 
-    // socket.emit('request-from-server', { Id })
 
 
 
   }, [socket])
   return (
-    <Box sx={{ width: '100%', height: 400 }}>
+    <Box sx={{ width: '60%', height: 400 }}>
       <Box sx={{ p: 5, overflowY: 'hidden', }}>
         {
           chatName.map((data, key) => (
-            <Link to={`/User/Room/${data.roomId}`} style={{ textDecoration: 'none' }} key={key}>
-              <Card sx={{ display: 'flex', mt: 2 }} key={key}>
+            <Link onClick={() => { setRoomId(data.roomId); setUserName(data.name) }} style={{ textDecoration: 'none' }} key={key}>
+              <Card sx={{ display: 'flex', mt: 2 }} key={key} >
 
                 <Box sx={{ width: '20%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                   <Avatar sx={{ width: 60, height: 60 }} />

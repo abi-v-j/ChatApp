@@ -1,10 +1,9 @@
 import React, { useContext, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
 import SocketContext from '../../MyContext'
 import ChatWindow from '../Components/ChatWindow'
 
-const Room = () => {
-  const {Id} = useParams()
+const Room = ({Id, userName}) => {
+
 
   const {socket} = useContext(SocketContext)
 
@@ -15,8 +14,13 @@ const Room = () => {
     socket.emit('join-room', { Id })
   }, [socket,Id])
 
+
+
   return (
-      <ChatWindow/>
+   
+ 
+        <ChatWindow Id={Id} userName={userName} />
+  
   )
 }
 
