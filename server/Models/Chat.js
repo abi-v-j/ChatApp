@@ -16,6 +16,15 @@ const chatSchema = new mongoose.Schema({
   },
   sessionId:{
     type:String
+  },
+  image:{
+    type:String
+  },
+  video:{
+    type:String
+  },
+  pdf:{
+    type:String
   }
  
 

@@ -9,7 +9,6 @@ import { Link } from 'react-router-dom'
 const Chat = ({ setRoomId, setUserName }) => {
   const { socket } = useContext(SocketContext)
 
-  // console.log(Id);
 
   const [chatName, setChatName] = useState([])
 
@@ -18,9 +17,7 @@ const Chat = ({ setRoomId, setUserName }) => {
     const Id = Cookies.get('userId')
     axios.get(`http://localhost:7000/room/${Id}`).then((response) => {
       const data = response.data
-      console.log(data);
       setChatName(data)
-      console.log('hi');
 
     })
   }, [])
@@ -28,7 +25,6 @@ const Chat = ({ setRoomId, setUserName }) => {
   useEffect(() => {
     if (!socket) return
 
-    console.log('hello');
 
 
     const Id = Cookies.get('userId')
@@ -40,7 +36,6 @@ const Chat = ({ setRoomId, setUserName }) => {
         const data = response.data
         console.log(data);
         setChatName(data)
-        console.log('how');
 
       })
     })
@@ -63,22 +58,23 @@ const Chat = ({ setRoomId, setUserName }) => {
 
   }, [socket])
   return (
-    <Box sx={{ width: '60%', height: 400 }}>
+    <Box sx={{ width: '100%', height: 400 }}>
       <Box sx={{ p: 5, overflowY: 'hidden', }}>
         {
           chatName.map((data, key) => (
             <Link onClick={() => { setRoomId(data.roomId); setUserName(data.name) }} style={{ textDecoration: 'none' }} key={key}>
-              <Card sx={{ display: 'flex', mt: 2 }} key={key} >
+              <Card sx={{ display: 'flex', mt: 2, p: 1, width: 500 }} key={key} >
 
-                <Box sx={{ width: '20%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                   <Avatar sx={{ width: 60, height: 60 }} />
 
                 </Box>
-                <Box sx={{ p: 3, width: '80%', display: 'flex', justifyContent: 'space-between' }}>
+                <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
                   <Box>
-                    <Typography variant='h5'>
+                    <Typography variant='h5' >
                       {data.name}
                     </Typography>
+
 
                   </Box>
 
