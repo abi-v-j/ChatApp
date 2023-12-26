@@ -156,7 +156,7 @@ const ChatWindow = ({ Id, userName }) => {
                             <Box sx={{ display: 'flex', justifyContent: msg.received ? 'flex-end' : 'flex-start' }} key={key}>
                                 <Card sx={{ px: 2, mx: 3, mt: 1, borderRadius: 4, maxWidth: 200 }}>
                                     {
-                                        msg.image && <img src={msg.image} alt='Image' width={200} />
+                                        msg.image && <img src={msg.image} alt='' width={200} />
 
                                     }
                                     {
